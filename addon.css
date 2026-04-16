@@ -1,0 +1,96 @@
+
+/* WooblyDisc Addon Styles */
+
+body{
+  padding-top:70px;
+}
+
+.woobly-navbar{
+  position:fixed;
+  top:0;
+  left:0;
+  right:0;
+  height:56px;
+  background:#1e1f22;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  padding:0 20px;
+  border-bottom:1px solid #3f4147;
+  z-index:9999;
+  font-family:gg sans, Noto Sans, sans-serif;
+}
+
+.woobly-logo{
+  font-weight:700;
+  color:#5865f2;
+  font-size:18px;
+}
+
+.woobly-links{
+  display:flex;
+  gap:20px;
+}
+
+.woobly-links a{
+  color:#b5bac1;
+  text-decoration:none;
+  font-size:14px;
+}
+
+.woobly-links a:hover{
+  color:white;
+}
+
+.woobly-upgrade{
+  background:#5865f2;
+  border:none;
+  padding:6px 14px;
+  border-radius:4px;
+  color:white;
+  cursor:pointer;
+}
+
+.woobly-watermark{
+  position:absolute;
+  bottom:6px;
+  right:8px;
+  font-size:11px;
+  opacity:.7;
+  color:#949ba4;
+  pointer-events:none;
+}
+
+.woobly-premium{
+  margin-top:40px;
+  max-width:800px;
+  background:#1e1f22;
+  padding:20px;
+  border-radius:8px;
+  color:white;
+}
+
+.woobly-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(160px,1fr));
+  gap:12px;
+  margin-top:15px;
+}
+
+.woobly-card{
+  background:#2b2d31;
+  padding:12px;
+  border-radius:6px;
+}
+
+.frame-library{
+  margin-top:30px;
+}
+
+.frame-library img{
+  width:60px;
+  height:60px;
+  border-radius:8px;
+  cursor:pointer;
+  margin:4px;
+}

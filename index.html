@@ -1,0 +1,544 @@
+
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=gg+sans:wght@400;500;700&display=swap');
+  *{box-sizing:border-box;margin:0;padding:0}
+  :root{
+    --dc-bg-primary:#313338;
+    --dc-bg-secondary:#2b2d31;
+    --dc-bg-tertiary:#1e1f22;
+    --dc-bg-floating:#111214;
+    --dc-bg-modifier-hover:rgba(79,84,92,0.16);
+    --dc-bg-modifier-selected:rgba(79,84,92,0.32);
+    --dc-text-normal:#dbdee1;
+    --dc-text-muted:#949ba4;
+    --dc-text-link:#00a8fc;
+    --dc-brand:#5865f2;
+    --dc-online:#23a559;
+    --dc-idle:#f0b232;
+    --dc-dnd:#f23f43;
+    --dc-offline:#80848e;
+    --dc-streaming:#593695;
+    --dc-header-primary:#f2f3f5;
+    --dc-interactive-normal:#b5bac1;
+    --dc-border:#3f4147;
+  }
+  body{
+    background:var(--dc-bg-secondary);
+    font-family:'gg sans','Noto Sans','Helvetica Neue',Helvetica,Arial,sans-serif;
+    display:flex;justify-content:center;align-items:flex-start;
+    padding:24px;gap:20px;min-height:100vh;color:var(--dc-text-normal);
+    font-size:14px;
+  }
+  .layout{display:flex;gap:20px;align-items:flex-start;width:100%;max-width:800px;flex-wrap:wrap;}
+
+  /* EDITOR PANEL */
+  .editor{
+    background:var(--dc-bg-tertiary);
+    border-radius:8px;padding:16px;
+    width:240px;flex-shrink:0;
+    border:1px solid rgba(255,255,255,0.06);
+  }
+  .editor h3{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.7px;color:var(--dc-text-muted);margin-bottom:12px;}
+  .field-label{font-size:11px;font-weight:700;color:var(--dc-text-muted);text-transform:uppercase;letter-spacing:0.5px;margin:10px 0 4px;}
+  .editor input[type=text],.editor input[type=url],.editor textarea,.editor select{
+    width:100%;background:var(--dc-bg-secondary);
+    border:1px solid var(--dc-border);border-radius:3px;
+    color:var(--dc-text-normal);padding:7px 10px;font-size:14px;
+    font-family:inherit;outline:none;transition:border-color .15s;
+  }
+  .editor input[type=text]:focus,.editor input[type=url]:focus,.editor textarea:focus,.editor select:focus{border-color:var(--dc-brand);}
+  .editor textarea{resize:vertical;min-height:60px;max-height:100px;}
+  .editor select option{background:var(--dc-bg-secondary);}
+  .file-btn{
+    width:100%;padding:7px;background:var(--dc-bg-modifier-hover);
+    border:1px dashed var(--dc-border);border-radius:3px;
+    color:var(--dc-text-muted);font-size:12px;cursor:pointer;text-align:center;
+    transition:all .15s;
+  }
+  .file-btn:hover{border-color:var(--dc-brand);color:var(--dc-text-normal);}
+  .file-btn input{display:none;}
+  .cb-row{display:flex;align-items:center;gap:8px;margin:4px 0;cursor:pointer;font-size:13px;color:var(--dc-text-normal);}
+  .cb-row input{accent-color:var(--dc-brand);}
+  .divider{height:1px;background:var(--dc-border);margin:12px 0;}
+  .action-btn{
+    width:100%;padding:8px;border:none;border-radius:3px;
+    background:var(--dc-brand);color:#fff;font-weight:500;
+    cursor:pointer;font-size:14px;font-family:inherit;
+    transition:background .15s;margin-top:6px;
+  }
+  .action-btn:hover{background:#4752c4;}
+  .action-btn.secondary{background:var(--dc-bg-modifier-hover);color:var(--dc-text-normal);}
+  .action-btn.secondary:hover{background:var(--dc-bg-modifier-selected);}
+
+  /* PROFILE CARD */
+  .profile-wrap{position:relative;}
+  .profile{
+    width:300px;
+    background:var(--dc-bg-floating);
+    border-radius:8px;overflow:hidden;
+    box-shadow:0 8px 16px rgba(0,0,0,.24),0 0 0 1px rgba(0,0,0,.14);
+    flex-shrink:0;
+    user-select:none;
+  }
+  .banner{
+    height:120px;background-color:#5865f2;
+    background-size:cover;background-position:center;
+    position:relative;overflow:hidden;flex-shrink:0;
+  }
+  .banner-shimmer{
+    position:absolute;inset:0;
+    background:linear-gradient(105deg,transparent 40%,rgba(255,255,255,.08) 50%,transparent 60%);
+    background-size:200% 200%;animation:shimmer 3s infinite;
+  }
+  @keyframes shimmer{0%{background-position:200% 0}100%{background-position:-200% 0}}
+
+  .avatar-area{padding:0 16px;position:relative;height:52px;}
+  .avatar-outer{
+    position:absolute;top:-44px;
+    width:80px;height:80px;
+    border-radius:50%;
+    padding:4px;
+    background:var(--dc-bg-floating);
+  }
+  .avatar{
+    width:72px;height:72px;border-radius:50%;
+    background:var(--dc-bg-tertiary);
+    background-image:url("https://cdn-icons-png.flaticon.com/512/149/149071.png");
+    background-size:cover;background-position:center;
+    flex-shrink:0;
+  }
+  .avatar-frame{
+    position:absolute;top:0;left:0;width:80px;height:80px;
+    pointer-events:none;display:none;
+  }
+  .status-ring{
+    position:absolute;bottom:0;right:0;
+    width:24px;height:24px;border-radius:50%;
+    background:var(--dc-bg-floating);
+    display:flex;align-items:center;justify-content:center;
+  }
+  .status-dot{width:16px;height:16px;border-radius:50%;background:var(--dc-online);}
+
+  .action-area{
+    position:absolute;right:16px;top:8px;
+    display:flex;gap:8px;
+  }
+  .icon-btn{
+    width:32px;height:32px;border-radius:50%;
+    background:var(--dc-bg-secondary);border:none;
+    display:flex;align-items:center;justify-content:center;
+    cursor:pointer;color:var(--dc-interactive-normal);
+    transition:background .15s,color .15s;font-size:14px;
+  }
+  .icon-btn:hover{background:var(--dc-bg-modifier-hover);color:var(--dc-text-normal);}
+
+  .profile-body{padding:0 16px 16px;}
+
+  .name-row{margin-top:12px;display:flex;align-items:center;gap:0;}
+  .username{font-size:20px;font-weight:700;color:var(--dc-header-primary);line-height:1.2;}
+  .discriminator{font-size:20px;font-weight:700;color:var(--dc-text-muted);line-height:1.2;}
+  .display-name{font-size:12px;color:var(--dc-text-muted);margin-top:2px;}
+
+  .badges-row{display:flex;gap:4px;flex-wrap:wrap;margin-top:8px;}
+  .badge-icon{width:22px;height:22px;cursor:pointer;position:relative;}
+  .badge-icon img{width:22px;height:22px;}
+  .badge-tooltip{
+    position:absolute;bottom:28px;left:50%;transform:translateX(-50%);
+    background:#111214;color:#dbdee1;font-size:13px;padding:5px 10px;
+    border-radius:5px;white-space:nowrap;pointer-events:none;
+    opacity:0;transition:opacity .15s;z-index:10;
+    box-shadow:0 4px 12px rgba(0,0,0,.5);
+  }
+  .badge-icon:hover .badge-tooltip{opacity:1;}
+
+  .section-divider{height:1px;background:var(--dc-border);margin:12px 0;}
+
+  .section-title{
+    font-size:11px;font-weight:700;text-transform:uppercase;
+    letter-spacing:0.7px;color:var(--dc-text-normal);margin-bottom:6px;
+  }
+  .bio-text{font-size:14px;color:var(--dc-text-normal);line-height:1.5;word-break:break-word;}
+
+  .member-since{font-size:14px;color:var(--dc-text-normal);display:flex;align-items:center;gap:6px;}
+  .member-since svg{flex-shrink:0;}
+
+  /* Activities */
+  .activity-card{
+    background:rgba(255,255,255,0.05);border-radius:6px;
+    padding:10px;margin-top:4px;
+    display:flex;gap:12px;align-items:flex-start;
+  }
+  .activity-art{
+    width:60px;height:60px;border-radius:4px;
+    background:var(--dc-bg-secondary);flex-shrink:0;
+    background-size:cover;background-position:center;
+    display:flex;align-items:center;justify-content:center;
+    font-size:26px;
+  }
+  .activity-info{flex:1;min-width:0;}
+  .activity-game{font-size:13px;font-weight:700;color:var(--dc-header-primary);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+  .activity-detail{font-size:12px;color:var(--dc-text-muted);margin-top:1px;}
+  .activity-elapsed{font-size:11px;color:var(--dc-text-muted);margin-top:2px;}
+
+  .note-box{
+    background:rgba(255,255,255,.05);border-radius:4px;
+    padding:8px;margin-top:4px;
+    font-size:14px;color:var(--dc-text-muted);min-height:36px;
+    cursor:text;border:1px solid transparent;transition:border-color .15s;
+  }
+  .note-box:hover{border-color:var(--dc-border);}
+
+  .add-friend-btn{
+    width:100%;padding:6px;border:none;border-radius:3px;
+    background:var(--dc-brand);color:#fff;font-size:14px;font-weight:500;
+    cursor:pointer;font-family:inherit;transition:background .15s;
+  }
+  .add-friend-btn:hover{background:#4752c4;}
+
+  /* Status pill */
+  .status-tag{
+    display:inline-flex;align-items:center;gap:5px;
+    font-size:12px;color:var(--dc-text-muted);margin-top:3px;
+  }
+  .status-tag-dot{width:8px;height:8px;border-radius:50%;}
+
+  /* Color picker row */
+  .color-row{display:flex;gap:6px;flex-wrap:wrap;margin-top:4px;}
+  .color-swatch{
+    width:24px;height:24px;border-radius:50%;cursor:pointer;
+    border:2px solid transparent;transition:border-color .15s;
+    flex-shrink:0;
+  }
+  .color-swatch.active,.color-swatch:hover{border-color:#fff;}
+
+  /* Pronoun */
+  .pronouns{font-size:12px;color:var(--dc-text-muted);margin-top:1px;}
+
+  .hidden{display:none!important;}
+</style>
+
+<div class="layout">
+
+<!-- EDITOR -->
+<div class="editor" id="editor">
+  <h3>Profile Editor</h3>
+
+  <div class="field-label">Display Name</div>
+  <input type="text" id="inDisplayName" placeholder="Display Name" value="Wumpus">
+
+  <div class="field-label">Username</div>
+  <input type="text" id="inUsername" placeholder="username" value="wumpus">
+
+  <div class="field-label">Pronouns</div>
+  <input type="text" id="inPronouns" placeholder="they/them">
+
+  <div class="field-label">Bio</div>
+  <textarea id="inBio" placeholder="Tell the world about yourself!">Just your average Discord mascot 🐙</textarea>
+
+  <div class="field-label">Avatar</div>
+  <label class="file-btn"><input type="file" id="inAvatar" accept="image/*"> Upload Avatar</label>
+
+  <div class="field-label">Avatar Frame URL</div>
+  <input type="url" id="inFrameUrl" placeholder="https://...">
+
+  <div class="field-label">Banner Color</div>
+  <div class="color-row" id="bannerColors">
+    <div class="color-swatch active" style="background:#5865f2" data-color="#5865f2"></div>
+    <div class="color-swatch" style="background:#eb459e" data-color="#eb459e"></div>
+    <div class="color-swatch" style="background:#57f287" data-color="#57f287"></div>
+    <div class="color-swatch" style="background:#fee75c" data-color="#fee75c"></div>
+    <div class="color-swatch" style="background:#ed4245" data-color="#ed4245"></div>
+    <div class="color-swatch" style="background:#ff7b00" data-color="#ff7b00"></div>
+  </div>
+
+  <div class="field-label">Custom Banner</div>
+  <label class="file-btn"><input type="file" id="inBanner" accept="image/*,image/gif"> Upload Banner</label>
+
+  <div class="field-label">Banner URL / GIF</div>
+  <input type="url" id="inBannerUrl" placeholder="https://...">
+
+  <div class="field-label">Status</div>
+  <select id="inStatus">
+    <option value="online">Online</option>
+    <option value="idle">Idle</option>
+    <option value="dnd">Do Not Disturb</option>
+    <option value="offline">Invisible</option>
+    <option value="streaming">Streaming</option>
+  </select>
+
+  <div class="field-label">Custom Status</div>
+  <input type="text" id="inCustomStatus" placeholder="🎮 Playing something cool">
+
+  <div class="divider"></div>
+  <h3>Badges</h3>
+  <label class="cb-row"><input type="checkbox" id="cbNitro" checked> Nitro</label>
+  <label class="cb-row"><input type="checkbox" id="cbBooster"> Server Booster</label>
+  <label class="cb-row"><input type="checkbox" id="cbDev"> Active Developer</label>
+  <label class="cb-row"><input type="checkbox" id="cbHype"> HypeSquad Bravery</label>
+  <label class="cb-row"><input type="checkbox" id="cbStaff"> Discord Staff</label>
+
+  <div class="divider"></div>
+  <h3>Activity</h3>
+  <div class="field-label">Game / App Name</div>
+  <input type="text" id="inGame" placeholder="Minecraft">
+  <div class="field-label">Activity Detail</div>
+  <input type="text" id="inGameDetail" placeholder="Survival Mode">
+  <div class="field-label">Game Icon URL</div>
+  <input type="url" id="inGameIcon" placeholder="https://...">
+
+  <div class="divider"></div>
+  <button class="action-btn secondary" id="btnToggle">Hide Editor</button>
+  <button class="action-btn" id="btnExport">Export PNG</button>
+</div>
+
+<!-- PROFILE CARD -->
+<div>
+  <div style="font-size:11px;color:var(--dc-text-muted);text-transform:uppercase;letter-spacing:.7px;font-weight:700;margin-bottom:8px;">Preview</div>
+  <div class="profile" id="profile">
+    <div class="banner" id="banner">
+      <div class="banner-shimmer" id="bannerShimmer"></div>
+    </div>
+
+    <div class="avatar-area">
+      <div class="avatar-outer">
+        <div class="avatar" id="avatar"></div>
+        <img id="avatarFrame" class="avatar-frame">
+      </div>
+      <div class="action-area">
+        <button class="icon-btn" title="More">&#8942;</button>
+        <button class="icon-btn" title="Message" style="font-size:15px;">&#9993;</button>
+      </div>
+    </div>
+
+    <div class="profile-body">
+      <div class="name-row">
+        <div>
+          <div class="username" id="displayName">Wumpus</div>
+          <div class="display-name" id="usernameDisplay">wumpus</div>
+        </div>
+      </div>
+
+      <div id="pronounsRow" class="pronouns"></div>
+
+      <div id="customStatusRow" class="status-tag" style="margin-top:4px;"></div>
+
+      <div class="badges-row" id="badgesRow"></div>
+
+      <div class="section-divider"></div>
+
+      <div id="memberSection">
+        <div class="section-title">Member Since</div>
+        <div class="member-since">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><rect x="3" y="4" width="18" height="18" rx="2" stroke="var(--dc-text-muted)" stroke-width="2"/><line x1="3" y1="9" x2="21" y2="9" stroke="var(--dc-text-muted)" stroke-width="2"/><line x1="8" y1="2" x2="8" y2="6" stroke="var(--dc-text-muted)" stroke-width="2" stroke-linecap="round"/><line x1="16" y1="2" x2="16" y2="6" stroke="var(--dc-text-muted)" stroke-width="2" stroke-linecap="round"/></svg>
+          <span id="joinDate">Apr 16, 2026</span>
+        </div>
+      </div>
+
+      <div id="bioSection" style="margin-top:0;">
+        <div class="section-divider"></div>
+        <div class="section-title">About Me</div>
+        <div class="bio-text" id="bioText">Just your average Discord mascot 🐙</div>
+      </div>
+
+      <div id="activitySection" class="hidden">
+        <div class="section-divider"></div>
+        <div class="section-title">Playing a Game</div>
+        <div class="activity-card">
+          <div class="activity-art" id="activityArt">🎮</div>
+          <div class="activity-info">
+            <div class="activity-game" id="activityGame">Game</div>
+            <div class="activity-detail" id="activityDetail"></div>
+            <div class="activity-elapsed" id="activityElapsed">00:00 elapsed</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="section-divider"></div>
+      <div class="section-title">Note</div>
+      <div class="note-box" contenteditable="true" id="noteBox">Click to add a note</div>
+
+      <div style="margin-top:12px;">
+        <button class="add-friend-btn" id="addFriendBtn">Add Friend</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<script>
+const $ = id => document.getElementById(id);
+
+const statusColors = {
+  online:'#23a559', idle:'#f0b232', dnd:'#f23f43',
+  offline:'#80848e', streaming:'#593695'
+};
+const statusLabels = {
+  online:'Online', idle:'Idle', dnd:'Do Not Disturb',
+  offline:'Invisible', streaming:'Streaming'
+};
+
+const badgeDefs = [
+  {id:'cbNitro', url:'https://cdn.discordapp.com/badge-icons/2ba85e8026a8614b640c2837bcdfe21b.png', tip:'Discord Nitro'},
+  {id:'cbBooster', url:'https://cdn.discordapp.com/badge-icons/8de6150d5d3be9579bc9c8b5c56b1a96.png', tip:'Server Booster'},
+  {id:'cbDev', url:'https://cdn.discordapp.com/badge-icons/6bdc42827a38498929a4920da12695d9.png', tip:'Active Developer'},
+  {id:'cbHype', url:'https://cdn.discordapp.com/badge-icons/8a88d63823d8a71cd5e390baa45efa02.png', tip:'HypeSquad Bravery'},
+  {id:'cbStaff', url:'https://cdn.discordapp.com/badge-icons/d2010c413a8da2208d7b7d8a5c080aba.png', tip:'Discord Staff'},
+];
+
+function updateBadges(){
+  const row = $('badgesRow');
+  row.innerHTML = '';
+  badgeDefs.forEach(b=>{
+    if($(b.id).checked){
+      const wrap = document.createElement('div');
+      wrap.className='badge-icon';
+      wrap.innerHTML=`<img src="${b.url}" title="${b.tip}" onerror="this.style.display='none'"><div class="badge-tooltip">${b.tip}</div>`;
+      row.appendChild(wrap);
+    }
+  });
+}
+
+function updateStatus(){
+  const v = $('inStatus').value;
+  const dot = document.querySelector('.status-dot');
+  if(dot) dot.style.background = statusColors[v] || statusColors.online;
+}
+
+function updateCustomStatus(){
+  const v = $('inCustomStatus').value.trim();
+  const el = $('customStatusRow');
+  if(v){
+    el.innerHTML=`<span style="font-size:14px;">${escHtml(v)}</span>`;
+    el.classList.remove('hidden');
+  } else {
+    el.innerHTML='';
+  }
+}
+
+function escHtml(s){
+  return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+
+function updateActivity(){
+  const game = $('inGame').value.trim();
+  const sect = $('activitySection');
+  if(game){
+    sect.classList.remove('hidden');
+    $('activityGame').textContent = game;
+    const detail = $('inGameDetail').value.trim();
+    $('activityDetail').textContent = detail;
+    $('activityDetail').style.display = detail ? 'block' : 'none';
+    const iconUrl = $('inGameIcon').value.trim();
+    const art = $('activityArt');
+    if(iconUrl){
+      art.style.backgroundImage=`url(${iconUrl})`;
+      art.textContent='';
+    } else {
+      art.style.backgroundImage='none';
+      art.textContent='🎮';
+    }
+  } else {
+    sect.classList.add('hidden');
+  }
+}
+
+let elapsed = 0;
+setInterval(()=>{
+  elapsed++;
+  const m = String(Math.floor(elapsed/60)).padStart(2,'0');
+  const s = String(elapsed%60).padStart(2,'0');
+  if($('activityElapsed')) $('activityElapsed').textContent = `${m}:${s} elapsed`;
+},1000);
+
+$('inDisplayName').oninput=()=>{
+  $('displayName').textContent = $('inDisplayName').value || 'username';
+};
+$('inUsername').oninput=()=>{
+  $('usernameDisplay').textContent = $('inUsername').value || 'username';
+};
+$('inPronouns').oninput=()=>{
+  const v=$('inPronouns').value.trim();
+  $('pronounsRow').textContent = v;
+};
+$('inBio').oninput=()=>{
+  const v=$('inBio').value.trim();
+  $('bioText').textContent = v || '';
+  $('bioSection').style.display = v ? 'block' : 'none';
+};
+$('inCustomStatus').oninput=updateCustomStatus;
+$('inStatus').onchange=updateStatus;
+$('inGame').oninput=$('inGameDetail').oninput=$('inGameIcon').oninput=updateActivity;
+
+badgeDefs.forEach(b=>{ $(b.id).onchange=updateBadges; });
+
+$('inAvatar').onchange=e=>{
+  const f=e.target.files[0];
+  if(f) $('avatar').style.backgroundImage=`url(${URL.createObjectURL(f)})`;
+};
+
+$('inFrameUrl').oninput=()=>{
+  const v=$('inFrameUrl').value.trim();
+  const f=$('avatarFrame');
+  if(v){ f.src=v; f.style.display='block'; }
+  else { f.style.display='none'; }
+};
+
+$('inBanner').onchange=e=>{
+  const f=e.target.files[0];
+  if(f){
+    $('banner').style.backgroundImage=`url(${URL.createObjectURL(f)})`;
+    $('bannerShimmer').style.display='none';
+  }
+};
+
+$('inBannerUrl').oninput=()=>{
+  const v=$('inBannerUrl').value.trim();
+  if(v){
+    $('banner').style.backgroundImage=`url(${v})`;
+    $('bannerShimmer').style.display='none';
+  }
+};
+
+document.querySelectorAll('.color-swatch').forEach(sw=>{
+  sw.onclick=()=>{
+    document.querySelectorAll('.color-swatch').forEach(s=>s.classList.remove('active'));
+    sw.classList.add('active');
+    $('banner').style.backgroundImage='none';
+    $('banner').style.backgroundColor=sw.dataset.color;
+    $('bannerShimmer').style.display='block';
+    $('inBannerUrl').value='';
+  };
+});
+
+$('addFriendBtn').onclick=()=>{
+  const btn=$('addFriendBtn');
+  btn.textContent='Friend Request Sent';
+  btn.style.background='#2d7d46';
+  setTimeout(()=>{
+    btn.textContent='Add Friend';
+    btn.style.background='';
+  },2000);
+};
+
+$('btnToggle').onclick=()=>{
+  $('editor').classList.toggle('hidden');
+};
+
+$('btnExport').onclick=()=>{
+  if(typeof html2canvas!=='undefined'){
+    html2canvas($('profile'),{useCORS:true,backgroundColor:'#111214'}).then(c=>{
+      const a=document.createElement('a');
+      a.download='discord-profile.png';
+      a.href=c.toDataURL();
+      a.click();
+    });
+  } else {
+    alert('html2canvas not loaded');
+  }
+};
+
+updateBadges();
+updateStatus();
+</script>
