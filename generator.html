@@ -29,24 +29,28 @@
     padding:24px;gap:20px;min-height:100vh;color:var(--dc-text-normal);
     font-size:14px;
   }
-  .layout{display:flex;gap:20px;align-items:flex-start;width:100%;max-width:800px;flex-wrap:wrap;}
+  .layout{display:flex;gap:20px;align-items:flex-start;width:100%;max-width:900px;flex-wrap:wrap;}
 
   /* EDITOR PANEL */
   .editor{
     background:var(--dc-bg-tertiary);
     border-radius:8px;padding:16px;
-    width:240px;flex-shrink:0;
+    width:250px;flex-shrink:0;
     border:1px solid rgba(255,255,255,0.06);
+    max-height:95vh;overflow-y:auto;
   }
+  .editor::-webkit-scrollbar{width:4px;}
+  .editor::-webkit-scrollbar-thumb{background:var(--dc-border);border-radius:4px;}
   .editor h3{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.7px;color:var(--dc-text-muted);margin-bottom:12px;}
   .field-label{font-size:11px;font-weight:700;color:var(--dc-text-muted);text-transform:uppercase;letter-spacing:0.5px;margin:10px 0 4px;}
-  .editor input[type=text],.editor input[type=url],.editor textarea,.editor select{
+  .editor input[type=text],.editor input[type=url],.editor input[type=date],.editor textarea,.editor select{
     width:100%;background:var(--dc-bg-secondary);
     border:1px solid var(--dc-border);border-radius:3px;
     color:var(--dc-text-normal);padding:7px 10px;font-size:14px;
     font-family:inherit;outline:none;transition:border-color .15s;
   }
-  .editor input[type=text]:focus,.editor input[type=url]:focus,.editor textarea:focus,.editor select:focus{border-color:var(--dc-brand);}
+  .editor input[type=date]{color-scheme:dark;}
+  .editor input[type=text]:focus,.editor input[type=url]:focus,.editor input[type=date]:focus,.editor textarea:focus,.editor select:focus{border-color:var(--dc-brand);}
   .editor textarea{resize:vertical;min-height:60px;max-height:100px;}
   .editor select option{background:var(--dc-bg-secondary);}
   .file-btn{
@@ -69,6 +73,43 @@
   .action-btn:hover{background:#4752c4;}
   .action-btn.secondary{background:var(--dc-bg-modifier-hover);color:var(--dc-text-normal);}
   .action-btn.secondary:hover{background:var(--dc-bg-modifier-selected);}
+
+  /* Mutual Server Editor */
+  .mutual-server-entry{
+    display:flex;align-items:center;gap:6px;
+    background:var(--dc-bg-secondary);border-radius:4px;
+    padding:6px;margin-bottom:4px;
+  }
+  .mutual-server-entry input{flex:1;background:transparent;border:none;color:var(--dc-text-normal);font-size:12px;outline:none;}
+  .mutual-server-entry input::placeholder{color:var(--dc-text-muted);}
+  .mutual-server-entry .rm-btn{
+    background:none;border:none;color:var(--dc-text-muted);
+    cursor:pointer;font-size:16px;line-height:1;padding:0 2px;
+    transition:color .15s;
+  }
+  .mutual-server-entry .rm-btn:hover{color:#f23f43;}
+  .add-mutual-btn{
+    width:100%;padding:5px;border:1px dashed var(--dc-border);
+    border-radius:3px;background:none;color:var(--dc-text-muted);
+    cursor:pointer;font-size:12px;transition:all .15s;
+  }
+  .add-mutual-btn:hover{border-color:var(--dc-brand);color:var(--dc-text-normal);}
+
+  /* Roles editor */
+  .role-entry{
+    display:flex;align-items:center;gap:6px;
+    margin-bottom:4px;
+  }
+  .role-entry input[type=text]{flex:1;}
+  .role-entry input[type=color]{
+    width:28px;height:28px;border:none;background:none;
+    cursor:pointer;padding:0;border-radius:3px;
+  }
+  .role-entry .rm-btn{
+    background:none;border:none;color:var(--dc-text-muted);
+    cursor:pointer;font-size:16px;padding:0 2px;transition:color .15s;
+  }
+  .role-entry .rm-btn:hover{color:#f23f43;}
 
   /* PROFILE CARD */
   .profile-wrap{position:relative;}
@@ -162,6 +203,33 @@
   .member-since{font-size:14px;color:var(--dc-text-normal);display:flex;align-items:center;gap:6px;}
   .member-since svg{flex-shrink:0;}
 
+  /* Mutual Servers */
+  .mutual-servers-list{display:flex;gap:6px;flex-wrap:wrap;margin-top:2px;}
+  .mutual-server-chip{
+    display:flex;align-items:center;gap:6px;
+    background:rgba(255,255,255,.05);
+    border-radius:4px;padding:5px 8px;font-size:12px;
+    color:var(--dc-text-normal);
+  }
+  .mutual-server-icon{
+    width:20px;height:20px;border-radius:50%;
+    background:var(--dc-bg-secondary);
+    display:flex;align-items:center;justify-content:center;
+    font-size:10px;font-weight:700;color:#fff;
+    flex-shrink:0;overflow:hidden;
+  }
+  .mutual-server-icon img{width:100%;height:100%;object-fit:cover;}
+
+  /* Roles */
+  .roles-list{display:flex;flex-wrap:wrap;gap:4px;margin-top:4px;}
+  .role-pill{
+    display:inline-flex;align-items:center;gap:5px;
+    background:rgba(255,255,255,.06);
+    border-radius:4px;padding:3px 8px;
+    font-size:12px;color:var(--dc-text-normal);
+  }
+  .role-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0;}
+
   /* Activities */
   .activity-card{
     background:rgba(255,255,255,0.05);border-radius:6px;
@@ -249,6 +317,8 @@
     <div class="color-swatch" style="background:#fee75c" data-color="#fee75c"></div>
     <div class="color-swatch" style="background:#ed4245" data-color="#ed4245"></div>
     <div class="color-swatch" style="background:#ff7b00" data-color="#ff7b00"></div>
+    <div class="color-swatch" style="background:#00b0f4" data-color="#00b0f4"></div>
+    <div class="color-swatch" style="background:#1a1a2e" data-color="#1a1a2e"></div>
   </div>
 
   <div class="field-label">Custom Banner</div>
@@ -269,13 +339,34 @@
   <div class="field-label">Custom Status</div>
   <input type="text" id="inCustomStatus" placeholder="🎮 Playing something cool">
 
+  <div class="field-label">Member Since</div>
+  <input type="date" id="inMemberSince" value="2026-04-16">
+
   <div class="divider"></div>
   <h3>Badges</h3>
   <label class="cb-row"><input type="checkbox" id="cbNitro" checked> Nitro</label>
   <label class="cb-row"><input type="checkbox" id="cbBooster"> Server Booster</label>
   <label class="cb-row"><input type="checkbox" id="cbDev"> Active Developer</label>
   <label class="cb-row"><input type="checkbox" id="cbHype"> HypeSquad Bravery</label>
+  <label class="cb-row"><input type="checkbox" id="cbBalance"> HypeSquad Balance</label>
+  <label class="cb-row"><input type="checkbox" id="cbBrilliance"> HypeSquad Brilliance</label>
   <label class="cb-row"><input type="checkbox" id="cbStaff"> Discord Staff</label>
+  <label class="cb-row"><input type="checkbox" id="cbPartner"> Discord Partner</label>
+  <label class="cb-row"><input type="checkbox" id="cbBugHunter"> Bug Hunter</label>
+  <label class="cb-row"><input type="checkbox" id="cbBugHunterGold"> Bug Hunter Gold</label>
+  <label class="cb-row"><input type="checkbox" id="cbEarlySupporter"> Early Supporter</label>
+  <label class="cb-row"><input type="checkbox" id="cbVerifiedDev"> Verified Bot Dev</label>
+  <label class="cb-row"><input type="checkbox" id="cbModAlumni"> Moderator Alumni</label>
+
+  <div class="divider"></div>
+  <h3>Mutual Servers</h3>
+  <div id="mutualServersList"></div>
+  <button class="add-mutual-btn" id="addMutualBtn">+ Add Mutual Server</button>
+
+  <div class="divider"></div>
+  <h3>Roles</h3>
+  <div id="rolesList"></div>
+  <button class="add-mutual-btn" id="addRoleBtn">+ Add Role</button>
 
   <div class="divider"></div>
   <h3>Activity</h3>
@@ -303,6 +394,9 @@
       <div class="avatar-outer">
         <div class="avatar" id="avatar"></div>
         <img id="avatarFrame" class="avatar-frame">
+        <div class="status-ring">
+          <div class="status-dot" id="statusDot"></div>
+        </div>
       </div>
       <div class="action-area">
         <button class="icon-btn" title="More">&#8942;</button>
@@ -319,9 +413,7 @@
       </div>
 
       <div id="pronounsRow" class="pronouns"></div>
-
       <div id="customStatusRow" class="status-tag" style="margin-top:4px;"></div>
-
       <div class="badges-row" id="badgesRow"></div>
 
       <div class="section-divider"></div>
@@ -338,6 +430,20 @@
         <div class="section-divider"></div>
         <div class="section-title">About Me</div>
         <div class="bio-text" id="bioText">Just your average Discord mascot 🐙</div>
+      </div>
+
+      <!-- Mutual Servers Section -->
+      <div id="mutualServersSection" class="hidden">
+        <div class="section-divider"></div>
+        <div class="section-title">Mutual Servers</div>
+        <div class="mutual-servers-list" id="mutualServersDisplay"></div>
+      </div>
+
+      <!-- Roles Section -->
+      <div id="rolesSection" class="hidden">
+        <div class="section-divider"></div>
+        <div class="section-title">Roles</div>
+        <div class="roles-list" id="rolesDisplay"></div>
       </div>
 
       <div id="activitySection" class="hidden">
@@ -374,24 +480,28 @@ const statusColors = {
   online:'#23a559', idle:'#f0b232', dnd:'#f23f43',
   offline:'#80848e', streaming:'#593695'
 };
-const statusLabels = {
-  online:'Online', idle:'Idle', dnd:'Do Not Disturb',
-  offline:'Invisible', streaming:'Streaming'
-};
 
 const badgeDefs = [
-  {id:'cbNitro', url:'https://cdn.discordapp.com/badge-icons/2ba85e8026a8614b640c2837bcdfe21b.png', tip:'Discord Nitro'},
-  {id:'cbBooster', url:'https://cdn.discordapp.com/badge-icons/8de6150d5d3be9579bc9c8b5c56b1a96.png', tip:'Server Booster'},
-  {id:'cbDev', url:'https://cdn.discordapp.com/badge-icons/6bdc42827a38498929a4920da12695d9.png', tip:'Active Developer'},
-  {id:'cbHype', url:'https://cdn.discordapp.com/badge-icons/8a88d63823d8a71cd5e390baa45efa02.png', tip:'HypeSquad Bravery'},
-  {id:'cbStaff', url:'https://cdn.discordapp.com/badge-icons/d2010c413a8da2208d7b7d8a5c080aba.png', tip:'Discord Staff'},
+  {id:'cbNitro',       url:'https://cdn.discordapp.com/badge-icons/2ba85e8026a8614b640c2837bcdfe21b.png', tip:'Discord Nitro'},
+  {id:'cbBooster',     url:'https://cdn.discordapp.com/badge-icons/8de6150d5d3be9579bc9c8b5c56b1a96.png', tip:'Server Booster'},
+  {id:'cbDev',         url:'https://cdn.discordapp.com/badge-icons/6bdc42827a38498929a4920da12695d9.png', tip:'Active Developer'},
+  {id:'cbHype',        url:'https://cdn.discordapp.com/badge-icons/8a88d63823d8a71cd5e390baa45efa02.png', tip:'HypeSquad Bravery'},
+  {id:'cbBalance',     url:'https://cdn.discordapp.com/badge-icons/3f9748e53446a137a052f3454e2de41e.png', tip:'HypeSquad Balance'},
+  {id:'cbBrilliance',  url:'https://cdn.discordapp.com/badge-icons/011940fd013082d85d058de181bfbe6e.png', tip:'HypeSquad Brilliance'},
+  {id:'cbStaff',       url:'https://cdn.discordapp.com/badge-icons/d2010c413a8da2208d7b7d8a5c080aba.png', tip:'Discord Staff'},
+  {id:'cbPartner',     url:'https://cdn.discordapp.com/badge-icons/3f9748e53446a137a052f3454e2de41e.png', tip:'Discord Partner'},
+  {id:'cbBugHunter',   url:'https://cdn.discordapp.com/badge-icons/2717692c7dca7289b35297368a940dd0.png', tip:'Bug Hunter'},
+  {id:'cbBugHunterGold',url:'https://cdn.discordapp.com/badge-icons/848f79194d4be5ff5f81505cbd0ce1e6.png', tip:'Bug Hunter Gold'},
+  {id:'cbEarlySupporter',url:'https://cdn.discordapp.com/badge-icons/7060786766c9c840eb3019e725d2b358.png', tip:'Early Supporter'},
+  {id:'cbVerifiedDev', url:'https://cdn.discordapp.com/badge-icons/6bdc42827a38498929a4920da12695d9.png', tip:'Verified Bot Developer'},
+  {id:'cbModAlumni',   url:'https://cdn.discordapp.com/badge-icons/43a0f57092a6cb41dddb5cd82b77fc43.png', tip:'Moderator Alumni'},
 ];
 
 function updateBadges(){
   const row = $('badgesRow');
   row.innerHTML = '';
   badgeDefs.forEach(b=>{
-    if($(b.id).checked){
+    if($(b.id) && $(b.id).checked){
       const wrap = document.createElement('div');
       wrap.className='badge-icon';
       wrap.innerHTML=`<img src="${b.url}" title="${b.tip}" onerror="this.style.display='none'"><div class="badge-tooltip">${b.tip}</div>`;
@@ -402,7 +512,7 @@ function updateBadges(){
 
 function updateStatus(){
   const v = $('inStatus').value;
-  const dot = document.querySelector('.status-dot');
+  const dot = $('statusDot');
   if(dot) dot.style.background = statusColors[v] || statusColors.online;
 }
 
@@ -421,6 +531,110 @@ function escHtml(s){
   return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
 }
 
+function updateMemberSince(){
+  const val = $('inMemberSince').value;
+  if(!val) return;
+  const d = new Date(val + 'T00:00:00');
+  const months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  $('joinDate').textContent = `${months[d.getMonth()]} ${d.getDate()}, ${d.getFullYear()}`;
+}
+
+// ---- Mutual Servers ----
+let mutualServers = [];
+
+function renderMutualEditor(){
+  const list = $('mutualServersList');
+  list.innerHTML = '';
+  mutualServers.forEach((srv, i) => {
+    const div = document.createElement('div');
+    div.className = 'mutual-server-entry';
+    div.innerHTML = `
+      <input type="text" placeholder="Server name" value="${escHtml(srv.name)}" data-i="${i}" class="ms-name">
+      <input type="text" placeholder="Icon URL (optional)" value="${escHtml(srv.icon)}" data-i="${i}" class="ms-icon" style="max-width:90px;">
+      <button class="rm-btn" data-i="${i}">×</button>
+    `;
+    div.querySelector('.ms-name').oninput = e => { mutualServers[i].name = e.target.value; renderMutualDisplay(); };
+    div.querySelector('.ms-icon').oninput = e => { mutualServers[i].icon = e.target.value; renderMutualDisplay(); };
+    div.querySelector('.rm-btn').onclick = () => { mutualServers.splice(i,1); renderMutualEditor(); renderMutualDisplay(); };
+    list.appendChild(div);
+  });
+}
+
+function renderMutualDisplay(){
+  const display = $('mutualServersDisplay');
+  const section = $('mutualServersSection');
+  display.innerHTML = '';
+  if(mutualServers.length === 0){ section.classList.add('hidden'); return; }
+  section.classList.remove('hidden');
+  mutualServers.forEach(srv => {
+    const chip = document.createElement('div');
+    chip.className = 'mutual-server-chip';
+    const initial = (srv.name||'?')[0].toUpperCase();
+    const iconColor = stringToColor(srv.name||'?');
+    if(srv.icon){
+      chip.innerHTML = `<div class="mutual-server-icon"><img src="${srv.icon}" onerror="this.parentElement.textContent='${initial}'"></div><span>${escHtml(srv.name||'Server')}</span>`;
+    } else {
+      chip.innerHTML = `<div class="mutual-server-icon" style="background:${iconColor}">${initial}</div><span>${escHtml(srv.name||'Server')}</span>`;
+    }
+    display.appendChild(chip);
+  });
+}
+
+function stringToColor(str){
+  let hash = 0;
+  for(let i=0;i<str.length;i++) hash = str.charCodeAt(i) + ((hash<<5)-hash);
+  const colors = ['#5865f2','#eb459e','#57f287','#fee75c','#ed4245','#ff7b00','#00b0f4','#593695'];
+  return colors[Math.abs(hash) % colors.length];
+}
+
+$('addMutualBtn').onclick = () => {
+  mutualServers.push({name:'', icon:''});
+  renderMutualEditor();
+  renderMutualDisplay();
+};
+
+// ---- Roles ----
+let roles = [];
+
+function renderRolesEditor(){
+  const list = $('rolesList');
+  list.innerHTML = '';
+  roles.forEach((role, i) => {
+    const div = document.createElement('div');
+    div.className = 'role-entry';
+    div.innerHTML = `
+      <input type="text" placeholder="Role name" value="${escHtml(role.name)}" data-i="${i}" class="rl-name">
+      <input type="color" value="${role.color}" data-i="${i}" class="rl-color">
+      <button class="rm-btn" data-i="${i}">×</button>
+    `;
+    div.querySelector('.rl-name').oninput = e => { roles[i].name = e.target.value; renderRolesDisplay(); };
+    div.querySelector('.rl-color').oninput = e => { roles[i].color = e.target.value; renderRolesDisplay(); };
+    div.querySelector('.rm-btn').onclick = () => { roles.splice(i,1); renderRolesEditor(); renderRolesDisplay(); };
+    list.appendChild(div);
+  });
+}
+
+function renderRolesDisplay(){
+  const display = $('rolesDisplay');
+  const section = $('rolesSection');
+  display.innerHTML = '';
+  if(roles.length === 0){ section.classList.add('hidden'); return; }
+  section.classList.remove('hidden');
+  roles.forEach(role => {
+    const pill = document.createElement('div');
+    pill.className = 'role-pill';
+    pill.innerHTML = `<div class="role-dot" style="background:${role.color}"></div><span>${escHtml(role.name||'Role')}</span>`;
+    display.appendChild(pill);
+  });
+}
+
+$('addRoleBtn').onclick = () => {
+  roles.push({name:'', color:'#5865f2'});
+  renderRolesEditor();
+  renderRolesDisplay();
+};
+
+// ---- Activity ----
 function updateActivity(){
   const game = $('inGame').value.trim();
   const sect = $('activitySection');
@@ -452,16 +666,10 @@ setInterval(()=>{
   if($('activityElapsed')) $('activityElapsed').textContent = `${m}:${s} elapsed`;
 },1000);
 
-$('inDisplayName').oninput=()=>{
-  $('displayName').textContent = $('inDisplayName').value || 'username';
-};
-$('inUsername').oninput=()=>{
-  $('usernameDisplay').textContent = $('inUsername').value || 'username';
-};
-$('inPronouns').oninput=()=>{
-  const v=$('inPronouns').value.trim();
-  $('pronounsRow').textContent = v;
-};
+// ---- Text inputs ----
+$('inDisplayName').oninput=()=>{ $('displayName').textContent = $('inDisplayName').value || 'username'; };
+$('inUsername').oninput=()=>{ $('usernameDisplay').textContent = $('inUsername').value || 'username'; };
+$('inPronouns').oninput=()=>{ $('pronounsRow').textContent = $('inPronouns').value.trim(); };
 $('inBio').oninput=()=>{
   const v=$('inBio').value.trim();
   $('bioText').textContent = v || '';
@@ -469,9 +677,10 @@ $('inBio').oninput=()=>{
 };
 $('inCustomStatus').oninput=updateCustomStatus;
 $('inStatus').onchange=updateStatus;
+$('inMemberSince').onchange=updateMemberSince;
 $('inGame').oninput=$('inGameDetail').oninput=$('inGameIcon').oninput=updateActivity;
 
-badgeDefs.forEach(b=>{ $(b.id).onchange=updateBadges; });
+badgeDefs.forEach(b=>{ if($(b.id)) $(b.id).onchange=updateBadges; });
 
 $('inAvatar').onchange=e=>{
   const f=e.target.files[0];
@@ -516,15 +725,10 @@ $('addFriendBtn').onclick=()=>{
   const btn=$('addFriendBtn');
   btn.textContent='Friend Request Sent';
   btn.style.background='#2d7d46';
-  setTimeout(()=>{
-    btn.textContent='Add Friend';
-    btn.style.background='';
-  },2000);
+  setTimeout(()=>{ btn.textContent='Add Friend'; btn.style.background=''; },2000);
 };
 
-$('btnToggle').onclick=()=>{
-  $('editor').classList.toggle('hidden');
-};
+$('btnToggle').onclick=()=>{ $('editor').classList.toggle('hidden'); };
 
 $('btnExport').onclick=()=>{
   if(typeof html2canvas!=='undefined'){
@@ -539,6 +743,8 @@ $('btnExport').onclick=()=>{
   }
 };
 
+// Init
 updateBadges();
 updateStatus();
+updateMemberSince();
 </script>
